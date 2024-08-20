@@ -303,7 +303,7 @@ class magicLibrary
         // {
         //     return false;  // 如果没有找到有效的魔法，直接返回
         // }
-        Vector3 posV = pTile.tile_up.posV3;
+        Vector3 posV = pTarget.currentTile.tile_up.posV3;
         posV.x += Toolbox.randomFloat(-0.3f, 0.3f);
         posV.y += Toolbox.randomFloat(-0.3f, 0.3f);
         if (!MWTools.checkCMP(pSelf.a, 10)) { return true; }

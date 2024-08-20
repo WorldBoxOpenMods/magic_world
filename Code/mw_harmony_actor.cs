@@ -498,11 +498,11 @@ namespace magic_world
 						if (magicAction == null) continue; // 确保每个元素不为空
 
 						float change = magicAction.stats[mw_S.change];
-						if (magicAction.attackAction == null || !Toolbox.randomChance(magicAction.stats[mw_S.change]))
+						if (magicAction.getHitAction == null || !Toolbox.randomChance(magicAction.stats[mw_S.change]))
 						{
 							continue;
 						}
-						magicAction.attackAction(__instance, __instance.attackTarget, magicAction, pTile);
+						magicAction.getHitAction(__instance, __instance.attackTarget, magicAction, pTile);
 						Debug.Log(magicAction.id);
 					}
 				}
@@ -615,7 +615,7 @@ namespace magic_world
 			{
 				return false;
 			}
-			
+
 
 
 			return true;
@@ -641,30 +641,32 @@ namespace magic_world
 					float num2 = Toolbox.DistVec2(actor.currentTile.pos, pTile.pos);
 					if ((useOnNature || !actor.race.nature) && num2 <= (float)pRad)
 					{
+						bool flag = false;
 						if (pIgnoreKingdoms != null)
 						{
-							// bool flag = false;
+
 							foreach (string b in pIgnoreKingdoms)
 							{
 								Kingdom kingdom = actor.kingdom;
-								if (((kingdom != null) ? kingdom.id : null) == b)
+								if (kingdom != null && kingdom.id == b)
 								{
-									// flag = true;
+									flag = true;
 									break;
 								}
 							}
-							// if (actor.asset.unit && Main.Actor_Magic.ContainsKey(actor))
-							// {
-							// 	List<magic> magicList = Main.Actor_Magic[actor];
-							// 	if (magicList.FirstOrDefault(m => m.id == "WindControl") != null)
-							// 	{
-							// 		break;
-							// 	}
-							// }
-							// if (flag)
-							// {
-							// 	goto IL_1FB;
-							// }
+
+						}
+						if (actor.asset.unit && Main.Actor_Magic.ContainsKey(actor))
+						{
+							List<magic> magicList = Main.Actor_Magic[actor];
+							if (magicList.FirstOrDefault(m => m.id == "WindControl") != null)
+							{
+								flag = true;
+							}
+						}
+						if (flag)
+						{
+							continue;
 						}
 
 						if (actor.asset.canBeHurtByPowers)

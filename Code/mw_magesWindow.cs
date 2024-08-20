@@ -50,6 +50,7 @@ namespace magic_world
             NewOptimizeSet("AutoSaveJGSet", "other.magic_power", contentComponent, null, null);
             NewOptimizeSet("MultipleSet", "other.magic_power", contentComponent, null, null);
             NewOptimizeSet("SAMSizeSet", "other.magic_power", contentComponent, null, null);
+            NewOptimizeSet("2", "other.magic_power", contentComponent, null, null);
 
 
             // pvz_ui.CustomTextColors.Add(wid, "#FFFFFF");
