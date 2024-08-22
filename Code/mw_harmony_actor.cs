@@ -25,6 +25,7 @@ using magic_world.Utils;
 using System.CodeDom;
 using System.Security.Cryptography;
 using System.Globalization;
+using System.Runtime.Remoting;
 
 namespace magic_world
 {
@@ -639,66 +640,86 @@ namespace magic_world
 				if (pOptions == null || !actor.asset.very_high_flyer || pOptions.applies_to_high_flyers)
 				{
 					float num2 = Toolbox.DistVec2(actor.currentTile.pos, pTile.pos);
+					bool flag = false;
 					if ((useOnNature || !actor.race.nature) && num2 <= (float)pRad)
 					{
-						bool flag = false;
 						if (pIgnoreKingdoms != null)
 						{
 
 							foreach (string b in pIgnoreKingdoms)
 							{
 								Kingdom kingdom = actor.kingdom;
-								if (kingdom != null && kingdom.id == b)
+								if (((kingdom != null) ? kingdom.id : null) == b)
 								{
 									flag = true;
-									break;
+									// Debug.Log(actor.getName() + "pIgnoreKingdoms");
+									return;
 								}
 							}
-
-						}
-						if (actor.asset.unit && Main.Actor_Magic.ContainsKey(actor))
-						{
-							List<magic> magicList = Main.Actor_Magic[actor];
-							if (magicList.FirstOrDefault(m => m.id == "WindControl") != null)
+							if (flag)
 							{
-								flag = true;
+								goto IL_1FB;
 							}
+						}
+
+
+					}
+					if (actor.asset.unit && Main.Actor_Magic.ContainsKey(actor))
+					{
+						List<magic> magicList = Main.Actor_Magic[actor];
+						if (magicList.FirstOrDefault(m => m.id == "WindControl") != null)
+						{
+							flag = true;
+							// Debug.Log(actor.getName() + "WindControl");
+							return;
 						}
 						if (flag)
 						{
-							continue;
-						}
-
-						if (actor.asset.canBeHurtByPowers)
-						{
-							AttackType pType = AttackType.Other;
-							if (pOptions != null)
-							{
-								pType = pOptions.attackType;
-							}
-							actor.getHit((float)pDamage, true, pType, pByWho, true, false);
-						}
-						float num3 = pSpeedForce - pSpeedForce * actor.stats[S.knockback_reduction];
-						if (num3 < 0f)
-						{
-							num3 = 0f;
-						}
-						if (num3 > 0f)
-						{
-							float angle = Toolbox.getAngle((float)actor.currentTile.x, (float)actor.currentTile.y, (float)pTile.x, (float)pTile.y);
-							float num4 = Mathf.Cos(angle) * num3 * num;
-							float num5 = Mathf.Sin(angle) * num3 * num;
-							if (pForceOut)
-							{
-								num4 *= -1f;
-								num5 *= -1f;
-							}
-							actor.addForce(num4, num5, num);
+							goto IL_1FB;
 						}
 					}
+					if (pByWho != null && pByWho.kingdom == actor.kingdom)
+					{
+						return;
+					}
+					if(flag)
+					{
+						Debug.Log("啊???");
+						return;
+					}
+					if (actor.asset.canBeHurtByPowers)
+					{
+						AttackType pType = AttackType.Other;
+						if (pOptions != null)
+						{
+							pType = pOptions.attackType;
+						}
+						actor.getHit((float)pDamage, true, pType, pByWho, true, false);
+						// Debug.Log(actor.getName() + "getHit");
+					}
+					float num3 = pSpeedForce - pSpeedForce * actor.stats[S.knockback_reduction];
+					if (num3 < 0f)
+					{
+						num3 = 0f;
+					}
+					if (num3 > 0f)
+					{
+						float angle = Toolbox.getAngle((float)actor.currentTile.x, (float)actor.currentTile.y, (float)pTile.x, (float)pTile.y);
+						float num4 = Mathf.Cos(angle) * num3 * num;
+						float num5 = Mathf.Sin(angle) * num3 * num;
+						if (pForceOut)
+						{
+							num4 *= -1f;
+							num5 *= -1f;
+						}
+						actor.addForce(num4, num5, num);
+						// Debug.Log(actor.getName() + "addForce");
+					}
 				}
-				// IL_1FB:;
 			}
+		IL_1FB:;
 		}
 	}
+
 }
+
