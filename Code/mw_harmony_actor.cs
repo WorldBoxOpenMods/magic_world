@@ -521,12 +521,12 @@ namespace magic_world
 			{
 				List<magic> magicList = Main.Actor_Magic[__instance.a];
 				magic magic1 = magicList.FirstOrDefault(m => m.id == "FireControl");
-				if (magic1 != null && pID == "burning" && !Toolbox.randomChance(magic1.stats[mw_S.change]))
+				if (magic1 != null && pID == "burning" && Toolbox.randomChance(magic1.stats[mw_S.change]))
 				{
 					return false;
 				}
 				magic1 = magicList.FirstOrDefault(m => m.id == "IceControl");
-				if (magic1 != null && pID == "frozen" && !Toolbox.randomChance(magic1.stats[mw_S.change]))
+				if (magic1 != null && pID == "frozen" && Toolbox.randomChance(magic1.stats[mw_S.change]))
 				{
 					return false;
 				}
@@ -687,37 +687,37 @@ namespace magic_world
 						Debug.Log("啊???");
 						return;
 					}
-					if (actor.asset.canBeHurtByPowers)
-					{
-						AttackType pType = AttackType.Other;
-						if (pOptions != null)
-						{
-							pType = pOptions.attackType;
-						}
-						actor.getHit((float)pDamage, true, pType, pByWho, true, false);
-						// Debug.Log(actor.getName() + "getHit");
-					}
-					float num3 = pSpeedForce - pSpeedForce * actor.stats[S.knockback_reduction];
-					if (num3 < 0f)
-					{
-						num3 = 0f;
-					}
-					if (num3 > 0f)
-					{
-						float angle = Toolbox.getAngle((float)actor.currentTile.x, (float)actor.currentTile.y, (float)pTile.x, (float)pTile.y);
-						float num4 = Mathf.Cos(angle) * num3 * num;
-						float num5 = Mathf.Sin(angle) * num3 * num;
-						if (pForceOut)
-						{
-							num4 *= -1f;
-							num5 *= -1f;
-						}
-						actor.addForce(num4, num5, num);
-						// Debug.Log(actor.getName() + "addForce");
-					}
+					// if (actor.asset.canBeHurtByPowers)
+					// {
+					// 	AttackType pType = AttackType.Other;
+					// 	if (pOptions != null)
+					// 	{
+					// 		pType = pOptions.attackType;
+					// 	}
+					// 	actor.getHit((float)pDamage, true, pType, pByWho, true, false);
+					// 	// Debug.Log(actor.getName() + "getHit");
+					// }
+					// float num3 = pSpeedForce - pSpeedForce * actor.stats[S.knockback_reduction];
+					// if (num3 < 0f)
+					// {
+					// 	num3 = 0f;
+					// }
+					// if (num3 > 0f)
+					// {
+					// 	float angle = Toolbox.getAngle((float)actor.currentTile.x, (float)actor.currentTile.y, (float)pTile.x, (float)pTile.y);
+					// 	float num4 = Mathf.Cos(angle) * num3 * num;
+					// 	float num5 = Mathf.Sin(angle) * num3 * num;
+					// 	if (pForceOut)
+					// 	{
+					// 		num4 *= -1f;
+					// 		num5 *= -1f;
+					// 	}
+					// 	actor.addForce(num4, num5, num);
+					// 	// Debug.Log(actor.getName() + "addForce");
+					// }
 				}
 			}
-		IL_1FB:;
+		IL_1FB:Debug.Log("啊???");
 		}
 	}
 
