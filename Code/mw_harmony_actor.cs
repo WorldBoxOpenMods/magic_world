@@ -575,38 +575,97 @@ namespace magic_world
 				}
 			}
 		}
-		// [HarmonyPrefix]
+		// [HarmonyPostfix]
 		// [HarmonyPatch(typeof(ActorBase), "goTo")]
-		// public static bool goTo(ActorBase __instance, WorldTile pTile, ref ExecuteEvent __result, bool pPathOnWater = false, bool pWalkOnBlocks = false)
+		// public static void goTo(ActorBase __instance, WorldTile pTile, ref ExecuteEvent __result, bool pPathOnWater = false, bool pWalkOnBlocks = false)
 		// {
-		// 	if (__instance.a.asset.unit && Main.Actor_Magic.ContainsKey(__instance.a)&&ActorMove.goTo((Actor)__instance, pTile, pPathOnWater, pWalkOnBlocks)==ExecuteEvent.True)
+		// 	if (__instance.a.asset.unit && Main.Actor_Magic.ContainsKey(__instance.a))
 		// 	{
+
 		// 		List<magic> magicList = Main.Actor_Magic[__instance.a];
 		// 		if (magicList.FirstOrDefault(m => m.id == "delivery") != null)
 		// 		{
-		// 			// string text = __instance.asset.effect_teleport;
-		// 			// if (string.IsNullOrEmpty(text))
-		// 			// {
-		// 			// 	text = "fx_teleport_blue";
-		// 			// }
-		// 			// EffectsLibrary.spawnAt(text, __instance.currentPosition, __instance.stats[S.scale]);
-		// 			// BaseEffect baseEffect = EffectsLibrary.spawnAt(text, pTile.posV3, __instance.stats[S.scale]);
-		// 			// if (baseEffect != null)
-		// 			// {
-		// 			// 	baseEffect.spriteAnimation.setFrameIndex(9);
-		// 			// }
-		// 			__instance.cancelAllBeh(null);
-		// 			__instance.spawnOn(pTile, 0f);
-		// 			__result=ExecuteEvent.True;
-		// 			return false;
+		// 			string text = __instance.asset.effect_teleport;
+		// 			if (string.IsNullOrEmpty(text))
+		// 			{
+		// 				text = "fx_teleport_blue";
+		// 			}
+		// 			EffectsLibrary.spawnAt(text, __instance.currentPosition, __instance.stats[S.scale]);
+		// 			BaseEffect baseEffect = EffectsLibrary.spawnAt(text, pTile.posV3, __instance.stats[S.scale]);
+		// 			if (baseEffect != null)
+		// 			{
+		// 				baseEffect.spriteAnimation.setFrameIndex(9);
+		// 			}
 		// 		}
 
 		// 	}
 
-		// 	__instance.setTileTarget(pTile);
-		// 	__result = ActorMove.goTo((Actor)__instance, pTile, pPathOnWater, pWalkOnBlocks);
-		// 	return true;
+
 		// }
+		[HarmonyPrefix]
+		[HarmonyPatch(typeof(ActorBase), "SmoothMovement")]
+		public static bool SmoothMovement(ActorBase __instance, Vector2 end, float pElapsed, float pWalkedDistance = 0f)
+		{
+			float num = Toolbox.Dist(__instance.currentPosition.x, __instance.currentPosition.y, end.x, end.y);
+			if (__instance.asset.canFlip && __instance.checkFlip())
+			{
+				if (__instance.currentPosition.x < end.x)
+				{
+					__instance.setFlip(true);
+				}
+				else
+				{
+					__instance.setFlip(false);
+				}
+			}
+			float num2 = __instance._current_combined_movement_speed;
+			num2 *= pElapsed;
+			num2 -= pWalkedDistance;
+			if (num2 < 0f)
+			{
+				num2 = 0f;
+			}
+
+
+			else if (num < num2)
+			{
+				num2 = num;
+				__instance.currentPosition = end;
+				num = 0f;
+			}
+			else
+			{
+				__instance.currentPosition = Vector2.MoveTowards(__instance.currentPosition, end, num2);
+				num = Toolbox.Dist(__instance.currentPosition.x, __instance.currentPosition.y, end.x, end.y);
+			}
+			if (__instance.a.asset.unit && Main.Actor_Magic.ContainsKey(__instance.a))
+			{
+				List<magic> magicList = Main.Actor_Magic[__instance.a];
+				if (magicList.FirstOrDefault(m => m.id == "delivery") != null)
+				{
+					num2 *= 1000f;
+					__instance.currentPosition = end;
+					num = 0f;
+				}
+			}
+			__instance.setPosDirty();
+			if (num == 0f)
+			{
+				if (__instance.isUsingPath())
+				{
+					__instance.updatePathMovement();
+				}
+				else
+				{
+					__instance.stopMovement();
+				}
+				if (__instance.is_moving)
+				{
+					__instance.SmoothMovement(__instance.nextStepPosition, pElapsed, pWalkedDistance + num2);
+				}
+			}
+			return false;
+		}
 		[HarmonyPrefix]
 		[HarmonyPatch(typeof(Actor), "getHit")]
 		public static bool GetHit(Actor __instance, float pDamage, bool pFlash = true, AttackType pAttackType = AttackType.Other, BaseSimObject pAttacker = null, bool pSkipIfShake = true, bool pMetallicWeapon = false)
@@ -682,7 +741,7 @@ namespace magic_world
 					{
 						return;
 					}
-					if(flag)
+					if (flag)
 					{
 						Debug.Log("啊???");
 						return;
@@ -717,7 +776,7 @@ namespace magic_world
 					// }
 				}
 			}
-		IL_1FB:Debug.Log("啊???");
+		IL_1FB: Debug.Log("啊???");
 		}
 	}
 

@@ -324,24 +324,7 @@ namespace magic_world.Utils
             return text;
         }
 
-        public static void spawnBurstPixel(this DropManager Pdrop, WorldTile pTile, string pDropID, float pForce, float pForceZ, float pStartZ = 0f, float pScale = -1f)
-        {
-            pForce *= 2;
-            Drop drop = Pdrop.spawn(pTile, pDropID, pStartZ, pScale);
-            float f = Toolbox.randomFloat(-3.1415927f, 3.1415927f);
-            Vector2 b = new Vector2(pForce * Mathf.Cos(f), pForce * Mathf.Sin(f));
-            drop._targetPosition = drop._startPosition + b;
-            drop._targetHeight = Toolbox.randomFloat(pForceZ, pForceZ * 2f);
-            drop._startPosition.y = drop._startPosition.y + pStartZ;
-            drop._currentHeightZ = drop._startPosition.y;
-            if (drop._scale < 1f) { drop._falling_speed /= drop._scale * 2f; }
-            float num = Toolbox.DistVec2Float(drop._startPosition, drop._targetPosition);
-            drop._timeToTarget = (num + drop._targetHeight * 3f) * 0.25f / drop._falling_speed;
-            if (drop._timeToTarget < 1f) { drop._timeToTarget += 0.5f; }
-            drop._timeInAir = 0f;
-            drop._parabolic = true;
-            drop.updatePosition();
-        }
+    
         public static void removeStatusEffect(this BaseSimObject obj, string pID)
         {
             if (obj == null) { return; }
@@ -471,37 +454,6 @@ namespace magic_world.Utils
                     act.data.inventory.dict[pID].amount = pResource.storage_max;
                 }
             }
-        }
-        public static bool hasItem(this Actor act, string pID)
-        {
-            if (act.equipment != null)
-            {
-                List<ActorEquipmentSlot> AESKList = ActorEquipment.getList(act.equipment);
-                if (AESKList != null && AESKList.Count > 0)
-                {
-                    foreach (ActorEquipmentSlot AE in AESKList)
-                    {
-                        if (AE.data != null && AE.data.id == pID) { return true; }
-                    }
-                }
-            }
-            return false;
-        }
-        public static ItemData addItem(this Actor a, string pID, string materials = null)
-        {
-            ItemData item_data = null;
-            if (a.equipment != null)
-            {
-                ItemAsset item_asset = AssetManager.items.get(pID);
-                if (item_asset != null)
-                {
-                    if (materials == null) { materials = Toolbox.getRandom<string>(item_asset.materials); }
-                    item_data = ItemGenerator.generateItem(item_asset, materials, World.world.mapStats.year, a.kingdom, a.getName(), 1, a);
-                    a.equipment.getSlot(item_asset.equipmentType).setItem(item_data);
-                }
-            }
-            a.setStatsDirty();
-            return item_data;
         }
     }
 }
