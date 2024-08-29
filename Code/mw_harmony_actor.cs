@@ -226,7 +226,7 @@ namespace magic_world
 		[HarmonyPatch(typeof(Actor), "updateAge")]
 		public static void updateAge(Actor __instance)
 		{
-			if (!__instance.Any()) { Main.Actor_Magic.Remove(__instance); return; }
+			if (!__instance.Any()) { Main.Actor_Magic.TryRemove(__instance, out _); return; }
 			if (!__instance.asset.unit) { return; }
 			__instance.data.get("ResearchStatus", out string RS, "idle");
 			if (RS == "idle" && __instance.stats["intelligence"] > 5f && Toolbox.randomChance(0.3f))
@@ -264,7 +264,7 @@ namespace magic_world
 			{
 				return;
 			}
-			if (!__instance.Any()) { Main.Actor_Magic.Remove(__instance); return; }
+			if (!__instance.Any()) { Main.Actor_Magic.TryRemove(__instance, out _); return; }
 			if (!__instance.asset.unit) { return; }
 			float world_time = (float)World.world.getCurWorldTime();
 			UpdateMagicPower(__instance, world_time);
@@ -296,7 +296,7 @@ namespace magic_world
 		{
 			if (Main.Actor_Magic.ContainsKey(pDeadUnit))
 			{
-				Main.Actor_Magic.Remove(pDeadUnit);
+				Main.Actor_Magic.TryRemove(pDeadUnit, out _);
 			}
 		}
 		// [HarmonyPrefix]

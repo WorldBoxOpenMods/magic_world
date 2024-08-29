@@ -29,7 +29,7 @@ namespace magic_world
                 {
                     if (a != null && Main.Actor_Magic.ContainsKey(a))
                     {
-                        Main.Actor_Magic.Remove(a);
+                        Main.Actor_Magic.TryRemove(a, out _);
                     }
                     continue;
                 }
@@ -72,7 +72,7 @@ namespace magic_world
                     if (Main.Actor_Magic[a].Count == 0)
                     {
                         Debug.Log("啊？");
-                        Main.Actor_Magic.Remove(a);
+                        Main.Actor_Magic.TryRemove(a, out _);
                     }
                 }
 

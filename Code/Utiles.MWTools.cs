@@ -57,7 +57,7 @@ namespace magic_world.Utils
             // magic.a = a;
             // magicList.Add(magic);
 
-            // Main.Actor_Magic.Add(a, magicList);
+            // Main.Actor_Magic.TryAdd(a, magicList);
         }
         private static readonly element[] AllElements = Enum.GetValues(typeof(element)) as element[];
 
@@ -160,9 +160,10 @@ namespace magic_world.Utils
             magic value = randomElement.Value;
             if (!Main.Actor_Magic.ContainsKey(a))
             {
-                Main.Actor_Magic.Add(a, new List<magic>() { });
+                List<magic>list=new();
+                Main.Actor_Magic.TryAdd(a, list);
             }
-            if (Main.Actor_Magic[a].Any(m => m.id == value.id))
+            else if (Main.Actor_Magic[a].Any(m => m.id == value.id))
             {
                 magic Magic = Main.Actor_Magic[a].First(m => m.id == value.id);
                 NewEntry(Magic);

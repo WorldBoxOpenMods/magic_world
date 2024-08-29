@@ -81,7 +81,7 @@ public class mw_traits
         a.data.set("currentMagicPower", 10000);
         if (!Main.Actor_Magic.ContainsKey(a))
         {
-            Main.Actor_Magic.Add(a, new List<magic>() { });
+            Main.Actor_Magic.TryAdd(a, new List<magic>() { });
         }
         AddMagic(a, Main.LightMagic);
 
@@ -99,7 +99,7 @@ public class mw_traits
         a.data.set("currentMagicPower", 10000);
         if (!Main.Actor_Magic.ContainsKey(a))
         {
-            Main.Actor_Magic.Add(a, new List<magic>() { });
+            Main.Actor_Magic.TryAdd(a, new List<magic>() { });
         }
         AddMagic(a, Main.DarkMagic);
 
@@ -117,7 +117,7 @@ public class mw_traits
         a.data.set("currentMagicPower", 10000);
         if (!Main.Actor_Magic.ContainsKey(a))
         {
-            Main.Actor_Magic.Add(a, new List<magic>() { });
+            Main.Actor_Magic.TryAdd(a, new List<magic>() { });
         }
         AddMagic(a, Main.IceMagic);
 
@@ -135,7 +135,7 @@ public class mw_traits
         a.data.set("currentMagicPower", 10000);
         if (!Main.Actor_Magic.ContainsKey(a))
         {
-            Main.Actor_Magic.Add(a, new List<magic>() { });
+            Main.Actor_Magic.TryAdd(a, new List<magic>() { });
         }
         AddMagic(a, Main.FireMagic);
 
@@ -153,7 +153,7 @@ public class mw_traits
         a.data.set("currentMagicPower", 10000);
         if (!Main.Actor_Magic.ContainsKey(a))
         {
-            Main.Actor_Magic.Add(a, new List<magic>() { });
+            Main.Actor_Magic.TryAdd(a, new List<magic>() { });
         }
         AddMagic(a, Main.NatureMagic);
         a.removeTrait("nature");

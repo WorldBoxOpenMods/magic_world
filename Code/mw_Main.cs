@@ -13,6 +13,7 @@ using magic_world.Code;
 using System;
 using System.IO;
 using System.Data.Common;
+using System.Collections.Concurrent;
 
 namespace magic_world
 {
@@ -31,7 +32,7 @@ namespace magic_world
 		public static Dictionary<string, magic> DarkMagic = new();
 		public static Dictionary<string, magic> LightMagic = new();
 		public static Dictionary<string, AttackAction> AttackMagic = new();
-		public static Dictionary<Actor, List<magic>> Actor_Magic = new();
+		public static ConcurrentDictionary<Actor, List<magic>> Actor_Magic = new();
 		public static Dictionary<Actor, List<magic>> Actor_Action_Magic = new();
 		public static Dictionary<Actor, List<AttackAction>> Actor_AttackMagics = new();
 		public static Dictionary<Actor, UnityAction<Actor, magic>> MagicAction = new();
